@@ -1,25 +1,56 @@
-require('dotenv').config()
+require("dotenv").config();
 const PORT = process.env.PORT;
-const express = require('express')
-const { createServer } = require('node:http')
-const { join } = require('node:path')
-const { Server } = require('socket.io')
-
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
-const server = createServer(app);
-const io = new Server(server);
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+const path = require("path");
 
-app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, '..', 'index.html'))
-})
+async function main() {
+  await mongoose.connect(process.env.DBURL);
 
-io.on('connection', (socket) => {
-    console.log('User conncted');
-    socket.on('disconnect', () =>{
-        console.log('user disconnected');
-    })
-})
+  const Message = mongoose.model("Message", {
+    name: String,
+    message: String,
+  });
 
-server.listen(PORT, () => {
+  app.use(express.static(path.join("..", "index.html")));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+
+  app.get("/messages", (req, res) => {
+    Message.find({})
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        console.log("Failed due to", err);
+      });
+  });
+
+  async function newMessage(name, message) {
+    const newMessage = new Message({
+      name: name,
+      message: message,
+    });
+    await newMessage.save().then(console.log(newMessage));
+  }
+
+  app.post("/messages", async (req, res) => {
+    const name = req.body.name;
+    const message = req.body.message;
+    await newMessage(name, message);
+  });
+
+  io.on("connection", () => {
+    console.log("a user is connected");
+  });
+
+  app.listen(PORT, () => {
     console.log(`Server started on port: ${PORT}`);
-});
+  });
+}
+
+main();
