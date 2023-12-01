@@ -16,8 +16,8 @@ router.post("/", async (req, res, next) => {
   const name = req.body.name;
   const message = req.body.message;
   await newMessage(name, message)
-    .then((result) => {
-      res.status(200).send(result);
+    .then(() => {
+      res.status(200).send(req.body);
     })
     .catch((err) => {
       return err;
