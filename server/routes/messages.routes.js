@@ -12,7 +12,15 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", async (req, res) => {
+  async function newMessage(name, message) {
+    const newMessage = new Message({
+      name: name,
+      message: message,
+    });
+    await newMessage.save().then(console.log(newMessage));
+  }
+
   const name = req.body.name;
   const message = req.body.message;
   await newMessage(name, message)
@@ -24,12 +32,27 @@ router.post("/", async (req, res, next) => {
     });
 });
 
-async function newMessage(name, message) {
-  const newMessage = new Message({
-    name: name,
-    message: message,
-  });
-  await newMessage.save().then(console.log(newMessage));
-}
+router.delete("/:id", async (req, res) => {
+  async function deleteMessage(_id) {
+    await Message.findByIdAndDelete(req.params.id);
+  }
+
+  await deleteMessage()
+    .then(() => {
+      res.status(200).send(req.body);
+    })
+    .catch((err) => {
+      return err;
+    });
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const messageToReturn = await Message.findOne({ _id: req.params.id });
+    res.status(200).send(messageToReturn);
+  } catch (error) {
+    res.send(error);
+  }
+});
 
 module.exports = router;
