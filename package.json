@@ -1,5 +1,5 @@
 {
-  "name": "simpel_chat",
+  "name": "simple_chat",
   "version": "1.0.0",
   "description": "simple chat bot utilizing mongodb and socketio",
   "main": "index.js",
