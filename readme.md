@@ -6,7 +6,7 @@ DEV - NPM RUN DEV
 
 # TODO:
 
-- Persistent chat/log on single page
+- Persistent chat/log on single page √
 - Rooms to move to
 - Password locked rooms
 - User accounts with auth
