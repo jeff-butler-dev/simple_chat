@@ -51,3 +51,4 @@ messagesRouter.get("/:id", async (req, res) => {
     }
 });
 export default messagesRouter;
+//# sourceMappingURL=messages.routes.js.map

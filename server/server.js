@@ -24,7 +24,7 @@ const io = new Server(server, {
 });
 
 //Routes
-import * as messagesRouter from "./routes/messages.routes.js";
+import messagesRouter from "./routes/messages.routes.js";
 import indexRouter from "./routes/index.routes.js";
 app.use("/messages", messagesRouter);
 app.use("/", indexRouter);
@@ -38,16 +38,17 @@ async function main() {
     const database = client.db("test");
     const messages = database.collection("messages");
 
+    // open a Change Stream on the "messages" collection
+    const changeStream = messages.watch();
+
+    // set up a listener when change events are emitted
+    changeStream.on("change", (next) => {
+      io.emit("chat message", next.fullDocument.message);
+    });
+
+    //notifying when a new user connects
     io.on("connection", (socket) => {
-      console.log("io on");
-
-      // open a Change Stream on the "messages" collection
-      const changeStream = messages.watch();
-
-      // set up a listener when change events are emitted
-      changeStream.on("change", (next) => {
-        io.emit("chat message", next.fullDocument.message);
-      });
+      console.log("used logged on");
     });
 
     server.listen(PORT, () => {

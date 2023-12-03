@@ -1,1 +1,12 @@
-{"extends": "@tsconfig/node20/tsconfig.json"}
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2022",
+        "noImplicitAny": true,
+        "moduleResolution": "NodeNext",
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": "."}
+        ,"extends": "@tsconfig/node20/tsconfig.json"}
