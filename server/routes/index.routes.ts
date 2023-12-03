@@ -7,4 +7,4 @@ indexRouter.get("/", (req:any,res?:any) => {
   res.sendFile(path.join(process.cwd(),"server","index.html"));
 });
 
-export default indexRouter
+export default indexRouter;
