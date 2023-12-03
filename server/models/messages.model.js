@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const Message = mongoose.model("Message", {
+import { model } from "mongoose";
+const Message = model("Message", {
   name: String,
   message: String,
 });
 
-module.exports = { Message };
+export default { Message };

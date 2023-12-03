@@ -1,28 +1,31 @@
 //DOTENV and PORT import
-require("dotenv").config();
+import dotEnv from "dotenv";
+dotEnv.config();
 const PORT = process.env.PORT;
 
 //Server specific imports
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+import express from "express";
+import { connect } from "mongoose";
+import parser from "body-parser";
+const { json, urlencoded } = parser;
+
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(json());
+app.use(urlencoded({ extended: false }));
 
 // IO Export and Listen
-const { MongoClient } = require("mongodb");
+import { MongoClient } from "mongodb";
 const client = new MongoClient(process.env.DBURL);
-const { Server } = require("socket.io");
-const { createServer } = require("node:http");
+import { Server } from "socket.io";
+import { createServer } from "node:http";
 const server = createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {},
 });
 
 //Routes
-const messagesRouter = require("./routes/messages.routes");
-const indexRouter = require("./routes/index.routes");
+import * as messagesRouter from "./routes/messages.routes.js";
+import indexRouter from "./routes/index.routes.js";
 app.use("/messages", messagesRouter);
 app.use("/", indexRouter);
 
@@ -30,7 +33,7 @@ app.use("/", indexRouter);
 async function main() {
   try {
     //awaiting successful connection to mongodb
-    await mongoose.connect(process.env.DBURL);
+    await connect(process.env.DBURL);
     await client.connect();
     const database = client.db("test");
     const messages = database.collection("messages");
@@ -39,7 +42,7 @@ async function main() {
       console.log("io on");
 
       // open a Change Stream on the "messages" collection
-      changeStream = messages.watch();
+      const changeStream = messages.watch();
 
       // set up a listener when change events are emitted
       changeStream.on("change", (next) => {

@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2022",
+        "noImplicitAny": true,
+        "moduleResolution": "NodeNext",
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "server/types/*",
+                "server/routes/*.ts"
+            ]
+        }
+    },"include": ["server/routes/*"],
+    "exclude": ["node_modules"]
+}

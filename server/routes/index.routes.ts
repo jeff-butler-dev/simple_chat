@@ -1,10 +1,10 @@
-import * as express from "express";
-import * as path from "path";
-const router = express.Router();
+import express from "express";
+import path from "path";
 
+const indexRouter = express.Router();
 
-router.get("/", (res: any) => {
-  res.sendFile(path.join(__dirname, "..", "index.html"));
+indexRouter.get("/", (req:any,res?:any) => {
+  res.sendFile(path.join(process.cwd(),"server","index.html"));
 });
 
-module.exports = router;
+export default indexRouter
